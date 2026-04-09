@@ -1,73 +1,86 @@
-# Welcome to your Lovable project
+# TraceVault — Enterprise Digital Forensics & Chain of Custody Platform
 
-## Project info
+TraceVault is a high-fidelity, production-grade digital forensics management system designed to uphold the highest standards of evidentiary integrity. Built with a focus on precision, security, and intuitive data visualization, TraceVault provides forensic investigators with a centralized environment to manage cases, track evidence, and maintain an immutable chain of custody.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🛡️ Core Pillars
 
-## How can I edit this code?
+- **Evidentiary Integrity**: Automated cryptographic hash verification to detect and alert on any unauthorized data tampering.
+- **Immutable Chain of Custody**: Real-time tracking of evidence transfers, ensuring legal admissibility and chronological transparency.
+- **Advanced Analytics**: Granular insights into forensic activities, case progression, and evidence health via a high-performance dashboard.
+- **Enterprise Security**: Industry-standard authentication (MFA), session auditing, and robust role-based access controls.
 
-There are several ways of editing your application.
+## ✨ Key Features
 
-**Use Lovable**
+### 📊 Forensic Intelligence Dashboard
+A centralized hub providing real-time statistics on case status, evidence health (Verified/Pending/Tampered), and recent audit events. Designed with a high-fidelity interface for immediate situational awareness.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### 📁 Case Management
+Comprehensive handling of complex forensic investigations. Organize digital evidence by case, maintain investigator notes, and track progression through modular workflows.
 
-Changes made via Lovable will be committed automatically to this repo.
+### ⛓️ Chain of Custody (CoC) Timeline
+A visual, chronological record of every interaction with a piece of evidence. Every transfer, review, and modification is logged with a secure audit trail, ensuring compliance with judicial standards.
 
-**Use your preferred IDE**
+### 🔍 Evidence Analytics & Search
+Rapid intake and categorization of digital assets. Supports advanced filtering, detailed metadata extraction, and visual timelines for complex evidentiary patterns.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📜 Automated Reporting
+Generate professional, high-fidelity forensic reports suitable for legal proceedings. Includes automated audit trails, integrity logs, and case summaries.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🔐 Security & Compliance
+- **Multi-Factor Authentication (MFA)**: Secure entry via time-based OTP.
+- **Audit Logging**: Comprehensive tracking of all system interactions (endpoints, actors, status codes).
+- **Session Monitoring**: Real-time management of active investigator sessions.
 
-Follow these steps:
+## 🚀 Technology Stack
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+TraceVault is engineered using a modern, high-performance web stack:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- **Frontend**: [React 18](https://reactjs.org/) with [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **UI Architecture**: [Radix UI](https://www.radix-ui.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animations**: [GSAP](https://greensock.com/gsap/) & [Framer Motion](https://www.framer.com/motion/) for fluid, professional interactions
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest)
+- **Utilities**: `date-fns`, `lucide-react`, `recharts`
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 🛠️ Getting Started
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Prerequisites
+
+- Node.js (v18.0.0 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd Tracevault
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## 🏗️ Project Structure
+
+```text
+src/
+├── components/     # High-fidelity UI components & Shadcn primitives
+├── hooks/          # Custom React hooks for API interaction & state
+├── lib/            # Utility functions & global configurations
+├── pages/          # Full-page forensic modules (Dashboard, Case Mgmt, etc.)
+├── store/          # Zustand state management (Auth, UI state)
+└── types/          # Global TypeScript interface definitions
 ```
 
-**Edit a file directly in GitHub**
+## ⚖️ License
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+All rights reserved. Property of the TraceVault Development Team.
