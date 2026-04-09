@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
 import config from './config.js';
 import { logger } from '../utils/logger.js';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+// Import MongoMemoryServer dynamically in the catch block to avoid production crashes
+// when devDependencies are missing.
+
 
 let connection = null;
 let mongoServer = null;
@@ -28,6 +30,9 @@ export async function connectDatabase() {
     } catch (error) {
         logger.warn(`Failed to connect to primary MongoDB. Starting in-memory fallback... (${error.message})`);
         try {
+            logger.info('Initializing in-memory MongoDB fallback...');
+            const { MongoMemoryServer } = await import('mongodb-memory-server');
+            
             process.env.MONGOMS_DOWNLOAD_DIR = './.mongo';
             process.env.MONGOMS_PREFER_GLOBAL_PATH = '1';
             process.env.MONGOMS_SYSTEM_BINARY = '';
