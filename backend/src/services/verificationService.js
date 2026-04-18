@@ -31,6 +31,7 @@ import {
     buildMerkleTree,
     generateFuzzyHash,
     compareFuzzyHashes,
+    generateTrustedTimestamp,
     verifyTrustedTimestamp,
     verifyHash,
     calculateEntropy,

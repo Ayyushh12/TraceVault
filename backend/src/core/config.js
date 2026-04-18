@@ -7,6 +7,7 @@
  */
 
 import dotenv from 'dotenv';
+import crypto from 'node:crypto';
 dotenv.config();
 
 // ──────────────────────────────────────────────────────────────
@@ -123,8 +124,9 @@ if (config.server.env === 'production') {
     if (config.jwt.secret === 'change-this-to-a-256-bit-secret-key-in-production') {
         throw new Error('JWT_SECRET must be changed from the default in production.');
     }
+    // Auto-derive refresh secret from JWT_SECRET if not explicitly set
     if (!config.jwt.refreshSecret) {
-        throw new Error('JWT_REFRESH_SECRET is required in production.');
+        config.jwt.refreshSecret = crypto.createHash('sha256').update(config.jwt.secret + '-refresh').digest('hex');
     }
 }
 

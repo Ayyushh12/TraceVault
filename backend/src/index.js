@@ -28,24 +28,45 @@ import { execSync } from 'node:child_process';
 let app = null;
 
 /**
- * Kill whatever process is using a given port (Windows-compatible).
+ * Kill whatever process is using a given port (cross-platform).
  */
 function killPort(port) {
+    const isWindows = process.platform === 'win32';
     try {
-        const result = execSync(
-            `cmd /c "netstat -aon | findstr :${port} | findstr LISTENING"`,
-            { encoding: 'utf-8', timeout: 5000 }
-        ).trim();
+        if (isWindows) {
+            const result = execSync(
+                `cmd /c "netstat -aon | findstr :${port} | findstr LISTENING"`,
+                { encoding: 'utf-8', timeout: 5000 }
+            ).trim();
 
-        const lines = result.split('\n').filter(Boolean);
-        for (const line of lines) {
-            const pid = line.trim().split(/\s+/).pop();
-            if (pid && pid !== '0') {
-                logger.warn(`Killing old process on port ${port} (PID ${pid})...`);
-                try {
-                    execSync(`taskkill /F /PID ${pid}`, { timeout: 5000 });
-                } catch {
-                    // Process may have already exited
+            const lines = result.split('\n').filter(Boolean);
+            for (const line of lines) {
+                const pid = line.trim().split(/\s+/).pop();
+                if (pid && pid !== '0') {
+                    logger.warn(`Killing old process on port ${port} (PID ${pid})...`);
+                    try {
+                        execSync(`taskkill /F /PID ${pid}`, { timeout: 5000 });
+                    } catch {
+                        // Process may have already exited
+                    }
+                }
+            }
+        } else {
+            // Linux / macOS
+            const result = execSync(
+                `lsof -ti:${port} 2>/dev/null || true`,
+                { encoding: 'utf-8', timeout: 5000 }
+            ).trim();
+
+            if (result) {
+                const pids = result.split('\n').filter(Boolean);
+                for (const pid of pids) {
+                    logger.warn(`Killing old process on port ${port} (PID ${pid})...`);
+                    try {
+                        execSync(`kill -9 ${pid}`, { timeout: 5000 });
+                    } catch {
+                        // Process may have already exited
+                    }
                 }
             }
         }

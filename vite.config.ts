@@ -21,6 +21,20 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+    // Increase chunk warning limit for production
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['framer-motion', 'lucide-react'],
+        },
+      },
+    },
+  },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
@@ -28,4 +42,3 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
-

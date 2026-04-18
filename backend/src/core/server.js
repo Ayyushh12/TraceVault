@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import crypto from 'node:crypto';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -30,10 +31,11 @@ export async function buildServer() {
     await app.register(fastifyWebsocket);
 
     // CORS – lock to frontend URL in production
+    const corsOrigins = config.server.env === 'production'
+        ? config.server.frontendUrl.split(',').map(u => u.trim()).filter(Boolean)
+        : true;
     await app.register(cors, {
-        origin: config.server.env === 'production'
-            ? [config.server.frontendUrl]
-            : true,
+        origin: corsOrigins,
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
