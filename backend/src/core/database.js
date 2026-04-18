@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import config from './config.js';
 import { logger } from '../utils/logger.js';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
 let connection = null;
 let mongoServer = null;
@@ -26,15 +25,25 @@ export async function connectDatabase() {
 
         return connection;
     } catch (error) {
+        // In production, there's no in-memory fallback — fail fast
+        if (config.server.env === 'production') {
+            logger.error(`MongoDB connection failed: ${error.message}`);
+            logger.error('MONGODB_URI must be set correctly in production. Exiting.');
+            process.exit(1);
+        }
+
         logger.warn(`Failed to connect to primary MongoDB. Starting in-memory fallback... (${error.message})`);
         try {
+            // Dynamic import — only loads in dev when actually needed
+            const { MongoMemoryServer } = await import('mongodb-memory-server');
+
             process.env.MONGOMS_DOWNLOAD_DIR = './.mongo';
             process.env.MONGOMS_PREFER_GLOBAL_PATH = '1';
             process.env.MONGOMS_SYSTEM_BINARY = '';
             
             mongoServer = await MongoMemoryServer.create({
                 instance: {
-                    launchTimeout: 60000, // 60 seconds for slow starts / first download
+                    launchTimeout: 60000,
                 },
                 binary: {
                     downloadDir: './.mongo',
