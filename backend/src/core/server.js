@@ -31,14 +31,47 @@ export async function buildServer() {
     await app.register(fastifyWebsocket);
 
     // CORS – lock to frontend URL in production
-    const corsOrigins = config.server.env === 'production'
-        ? config.server.frontendUrl.split(',').map(u => u.trim()).filter(Boolean)
-        : true;
+    let corsOrigins;
+    if (config.server.env === 'production') {
+        const rawOrigins = config.server.frontendUrl
+            .split(',')
+            .map(u => u.trim())
+            .filter(Boolean)
+            .map(u => {
+                // Ensure each origin has a protocol prefix
+                if (!u.startsWith('http://') && !u.startsWith('https://')) {
+                    return `https://${u}`;
+                }
+                return u;
+            });
+
+        // Build a dynamic origin validator that also allows Vercel preview URLs
+        corsOrigins = (origin, callback) => {
+            // Allow requests with no origin (server-to-server, health checks)
+            if (!origin) return callback(null, true);
+
+            // Check exact matches first
+            if (rawOrigins.includes(origin)) return callback(null, true);
+
+            // Allow any *.vercel.app preview deployment
+            if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) {
+                return callback(null, true);
+            }
+
+            logger.warn({ origin, allowed: rawOrigins }, 'CORS: blocked request from unrecognized origin');
+            callback(new Error('Not allowed by CORS'));
+        };
+
+        logger.info({ origins: rawOrigins }, 'CORS: production origins configured');
+    } else {
+        corsOrigins = true;
+    }
+
     await app.register(cors, {
         origin: corsOrigins,
         credentials: true,
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id', 'X-Hardware-ID', 'X-Device-Fingerprint'],
         exposedHeaders: ['x-request-id'],
     });
 
